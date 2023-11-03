@@ -71,13 +71,26 @@ function drawChain(midPointX1, midPointY1, midPointX2, midPointY2, chainType){
   if(chainType == 3){
     rotate(130);
   }
+
   for(let k = -2; k <= 2; k++){
-    circle((0+k*50)*resizeScale,0*resizeScale, 12*resizeScale);
-    circle((-12+k*50)*resizeScale,0*resizeScale, 2*resizeScale);
-    circle((12+k*50)*resizeScale,0*resizeScale, 2*resizeScale);
-    circle((0+k*50)*resizeScale,-12*resizeScale, 2*resizeScale);
-    circle((0+k*50)*resizeScale,12*resizeScale, 2*resizeScale);
+    push();
+    translate(k*50, 0);
+    rotate(2*rotateOffset);
+    circle(0*resizeScale,0*resizeScale, 12*resizeScale);
+    circle(-12*resizeScale,0*resizeScale, 2*resizeScale);
+    circle(12*resizeScale,0*resizeScale, 2*resizeScale);
+    circle(0*resizeScale,-12*resizeScale, 2*resizeScale);
+    circle(0*resizeScale,12*resizeScale, 2*resizeScale);
+    pop();
   }
+
+  // for(let k = -2; k <= 2; k++){
+  //   circle((0+k*50)*resizeScale,0*resizeScale, 12*resizeScale);
+  //   circle((-12+k*50)*resizeScale,0*resizeScale, 2*resizeScale);
+  //   circle((12+k*50)*resizeScale,0*resizeScale, 2*resizeScale);
+  //   circle((0+k*50)*resizeScale,-12*resizeScale, 2*resizeScale);
+  //   circle((0+k*50)*resizeScale,12*resizeScale, 2*resizeScale);
+  // }
   //draw the basic shapes of a chain
   //There are five circles in a basic shape
   //while four of them surround the largest one
