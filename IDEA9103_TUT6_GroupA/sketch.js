@@ -122,18 +122,21 @@ function drawCircle1Row1(){
   let ringCreater1 = new ringCreater(230, 230);
   ringCreater1.drawInnerRing();
 
+  push();
+  translate(230*resizeScale, 230*resizeScale);
+  rotate(-0.2*rotateOffset);
   stroke(255, 0, 0);
+  strokeWeight(2);
   let innerRadius = 100*resizeScale;
   let outerRadius = 200*resizeScale;
-  let centerX = 230*resizeScale;
-  let centerY = 230*resizeScale;
   for(let angle = 0; angle < 360; angle += 5){
-    let startX = centerX + innerRadius*cos(angle);
-    let startY = centerY + innerRadius*sin(angle);
-    let endX = centerX + outerRadius*cos(angle);
-    let endY = centerY + outerRadius*sin(angle);
+    let startX = innerRadius*cos(angle);
+    let startY = innerRadius*sin(angle);
+    let endX = outerRadius*cos(angle);
+    let endY = outerRadius*sin(angle);
     line(startX, startY, endX, endY);
   }
+  pop();
 }
 
 function drawCircle2Row1(){
@@ -188,18 +191,21 @@ function drawCircle3Row2(){
   let ringCreater1 = new ringCreater(975, 360);
   ringCreater1.drawInnerRing();
 
+  push();
+  translate(975*resizeScale, 360*resizeScale);
+  rotate(-0.2*rotateOffset);
   stroke(51, 0, 102);
+  strokeWeight(2);
   let innerRadius = 100*resizeScale;
   let outerRadius = 200*resizeScale;
-  let centerX = 975*resizeScale;
-  let centerY = 360*resizeScale;
   for(let angle = 0; angle < 360; angle += 5){
-    let startX = centerX + innerRadius*cos(angle);
-    let startY = centerY + innerRadius*sin(angle);
-    let endX = centerX + outerRadius*cos(angle);
-    let endY = centerY + outerRadius*sin(angle);
+    let startX = innerRadius*cos(angle);
+    let startY = innerRadius*sin(angle);
+    let endX = outerRadius*cos(angle);
+    let endY = outerRadius*sin(angle);
     line(startX, startY, endX, endY);
   }
+  pop();
 }
 
 function drawCircle4Row2(){
@@ -219,19 +225,21 @@ function drawCircle1Row3(){
   let ringCreater1 = new ringCreater(490, 940);
   ringCreater1.drawInnerRing();
 
+  push();
+  translate(490*resizeScale, 940*resizeScale);
+  rotate(-0.2*rotateOffset);
   stroke(255, 0, 0);
   strokeWeight(2);
   let innerRadius = 100*resizeScale;
   let outerRadius = 200*resizeScale;
-  let centerX = 490*resizeScale;
-  let centerY = 940*resizeScale;
   for(let angle = 0; angle < 360; angle += 5){
-    let startX = centerX + innerRadius*cos(angle);
-    let startY = centerY + innerRadius*sin(angle);
-    let endX = centerX + outerRadius*cos(angle);
-    let endY = centerY + outerRadius*sin(angle);
+    let startX = innerRadius*cos(angle);
+    let startY = innerRadius*sin(angle);
+    let endX = outerRadius*cos(angle);
+    let endY = outerRadius*sin(angle);
     line(startX, startY, endX, endY);
   }
+  pop();
 }
 
 function drawCircle2Row3(){
