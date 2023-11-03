@@ -1,6 +1,7 @@
 let resizeScaleX;
 let resizeScaleY;
 let resizeScale;
+let rotateOffset;
 
 //there are two kinds of rings
 //they are formed by the small shapes in the large circles
@@ -19,12 +20,23 @@ class ringCreater{
 
   //outer rings are made up of small circles
   drawOuterRing(){
+    push();
+    translate(this.centerX*resizeScale, this.centerY*resizeScale);
+    rotate(rotateOffset);
     for(let angleOffset = 0; angleOffset<=360; angleOffset+=15){
       for(let j = 1; j<=this.ringNum; j+=1){
         this.ringR = 80+j*30;
-        circle((this.centerX+this.ringR*cos(angleOffset))*resizeScale, (this.centerY+this.ringR*sin(angleOffset))*resizeScale,this.smallCircleR*resizeScale);
+        circle((this.ringR*cos(angleOffset))*resizeScale, (this.ringR*sin(angleOffset))*resizeScale,this.smallCircleR*resizeScale);
       }
     }
+    pop();
+
+    // for(let angleOffset = 0; angleOffset<=360; angleOffset+=15){
+    //   for(let j = 1; j<=this.ringNum; j+=1){
+    //     this.ringR = 80+j*30;
+    //     circle((this.centerX+this.ringR*cos(angleOffset))*resizeScale, (this.centerY+this.ringR*sin(angleOffset))*resizeScale,this.smallCircleR*resizeScale);
+    //   }
+    // }
   }
 
   //an inner ring is formed by nested circles
@@ -257,12 +269,14 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   angleMode(DEGREES);
   //createCanvas(1665, 900);
+  rotateOffset = 0;
 }
 
 function draw() {
   resizeScaleX = windowWidth/1665;
   resizeScaleY = windowHeight/900;
   resizeScale = min(resizeScaleX, resizeScaleY);
+  rotateOffset++;
 
   background(250, 220, 180);
 
