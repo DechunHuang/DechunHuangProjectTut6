@@ -2,6 +2,7 @@ let resizeScaleX;
 let resizeScaleY;
 let resizeScale;
 let rotateOffset;
+let innerRingROffeset5;
 
 //there are two kinds of rings
 //they are formed by the small shapes in the large circles
@@ -47,11 +48,16 @@ class ringCreater{
     this.innerRingColorB = [100, 60, 150, 140, 150];
     this.ringNum =5;
     this.ringR = 200;
-    for(let k = 0; k<=this.ringR;k+=1){
+    for(let k = 0; k<=3;k+=1){
       this.ringR -= 30;
       fill(this.innerRingColorR[k], this.innerRingColorG[k], this.innerRingColorB[k]);
       circle(this.centerX*resizeScale, this.centerY*resizeScale, this.ringR*resizeScale);
     }
+
+    this.ringR -= 30;
+    innerRingROffeset5 = lerp(innerRingROffeset5, 50, 0.001);
+    fill(this.innerRingColorR[0], this.innerRingColorG[0], this.innerRingColorB[0]);
+    circle(this.centerX*resizeScale, this.centerY*resizeScale, (50-innerRingROffeset5)*resizeScale);
   }
 }
 
@@ -291,6 +297,7 @@ function setup() {
   angleMode(DEGREES);
   //createCanvas(1665, 900);
   rotateOffset = 0;
+  innerRingROffeset5 = 0;
 }
 
 function draw() {
