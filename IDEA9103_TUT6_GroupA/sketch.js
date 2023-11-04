@@ -56,7 +56,7 @@ class ringCreater{
     if(cycleFrameDiff>0 && cycleFrameDiff<500){
       for(let k = 0; k<=3;k+=1){
         fill(this.innerRingColorR[k], this.innerRingColorG[k], this.innerRingColorB[k]);
-        circle(this.centerX*resizeScale, this.centerY*resizeScale, this.innerRingD[k]*resizeScale);
+        circle(this.centerX*resizeScale, this.centerY*resizeScale, this.innerRingD[k]*resizeScale*sin(frameCount));
       }
 
       innerRingROffeset5 = lerp(innerRingROffeset5, 50, 0.001);
