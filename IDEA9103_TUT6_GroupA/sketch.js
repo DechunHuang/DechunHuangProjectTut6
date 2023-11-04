@@ -52,22 +52,22 @@ class ringCreater{
     this.ringNum =5;
     this.innerRingD = [170, 140, 110, 80, 50];
 
-    console.log(innerRingROffeset5);
-    if(cycleFrameDiff>0 && cycleFrameDiff<500){
-      for(let k = 0; k<=3;k+=1){
-        fill(this.innerRingColorR[k], this.innerRingColorG[k], this.innerRingColorB[k]);
-        circle(this.centerX*resizeScale, this.centerY*resizeScale, this.innerRingD[k]*resizeScale*sin(frameCount));
-      }
-
-      innerRingROffeset5 = lerp(innerRingROffeset5, 50, 0.001);
-      fill(this.innerRingColorR[4], this.innerRingColorG[4], this.innerRingColorB[4]);
-      circle(this.centerX*resizeScale, this.centerY*resizeScale, (50-innerRingROffeset5)*resizeScale);
+    for(let k = 0; k<=4;k+=1){
+      fill(this.innerRingColorR[k], this.innerRingColorG[k], this.innerRingColorB[k]);
+      circle(this.centerX*resizeScale, this.centerY*resizeScale, this.innerRingD[k]*resizeScale*sin(frameCount+k*5));
     }
 
-    if(cycleFrameDiff>500){
-      innerRingCycleFrame = frameCount;
-      innerRingROffeset5 = 0;
-    }
+    // console.log(innerRingROffeset5);
+    // if(cycleFrameDiff>0 && cycleFrameDiff<500){
+    //   innerRingROffeset5 = lerp(innerRingROffeset5, 50, 0.001);
+    //   fill(this.innerRingColorR[4], this.innerRingColorG[4], this.innerRingColorB[4]);
+    //   circle(this.centerX*resizeScale, this.centerY*resizeScale, (50-innerRingROffeset5)*resizeScale);
+    // }
+
+    // if(cycleFrameDiff>500){
+    //   innerRingCycleFrame = frameCount;
+    //   innerRingROffeset5 = 0;
+    // }
 
   }
 }
