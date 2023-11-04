@@ -3,6 +3,8 @@ let resizeScaleY;
 let resizeScale;
 let rotateOffset;
 let innerRingROffeset5;
+let innerRingCycleFrame;
+let cycleFrameDiff;
 
 //there are two kinds of rings
 //they are formed by the small shapes in the large circles
@@ -17,6 +19,7 @@ class ringCreater{
     this.innerRingColorR = [0, 0, 0, 0, 0];
     this.innerRingColorG = [0, 0, 0, 0, 0];
     this.innerRingColorB = [0, 0, 0, 0, 0];
+    this.innerRingD = [0, 0, 0, 0, 0];
   }
 
   //outer rings are made up of small circles
@@ -47,17 +50,25 @@ class ringCreater{
     this.innerRingColorG = [160, 130, 180, 140, 180];
     this.innerRingColorB = [100, 60, 150, 140, 150];
     this.ringNum =5;
-    this.ringR = 200;
-    for(let k = 0; k<=3;k+=1){
-      this.ringR -= 30;
-      fill(this.innerRingColorR[k], this.innerRingColorG[k], this.innerRingColorB[k]);
-      circle(this.centerX*resizeScale, this.centerY*resizeScale, this.ringR*resizeScale);
+    this.innerRingD = [170, 140, 110, 80, 50];
+
+    console.log(innerRingROffeset5);
+    if(cycleFrameDiff>0 && cycleFrameDiff<500){
+      for(let k = 0; k<=3;k+=1){
+        fill(this.innerRingColorR[k], this.innerRingColorG[k], this.innerRingColorB[k]);
+        circle(this.centerX*resizeScale, this.centerY*resizeScale, this.innerRingD[k]*resizeScale);
+      }
+
+      innerRingROffeset5 = lerp(innerRingROffeset5, 50, 0.001);
+      fill(this.innerRingColorR[4], this.innerRingColorG[4], this.innerRingColorB[4]);
+      circle(this.centerX*resizeScale, this.centerY*resizeScale, (50-innerRingROffeset5)*resizeScale);
     }
 
-    this.ringR -= 30;
-    innerRingROffeset5 = lerp(innerRingROffeset5, 50, 0.001);
-    fill(this.innerRingColorR[0], this.innerRingColorG[0], this.innerRingColorB[0]);
-    circle(this.centerX*resizeScale, this.centerY*resizeScale, (50-innerRingROffeset5)*resizeScale);
+    if(cycleFrameDiff>500){
+      innerRingCycleFrame = frameCount;
+      innerRingROffeset5 = 0;
+    }
+
   }
 }
 
@@ -298,6 +309,8 @@ function setup() {
   //createCanvas(1665, 900);
   rotateOffset = 0;
   innerRingROffeset5 = 0;
+  cycleFrameDiff = 0;
+  innerRingCycleFrame = 0;
 }
 
 function draw() {
@@ -305,6 +318,7 @@ function draw() {
   resizeScaleY = windowHeight/900;
   resizeScale = min(resizeScaleX, resizeScaleY);
   rotateOffset++;
+  cycleFrameDiff = frameCount - innerRingCycleFrame;
 
   background(250, 220, 180);
 
