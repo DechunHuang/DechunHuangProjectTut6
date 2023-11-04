@@ -26,12 +26,28 @@ class ringCreater{
   drawOuterRing(){
     push();
     translate(this.centerX*resizeScale, this.centerY*resizeScale);
-    rotate(rotateOffset);
-    for(let angleOffset = 0; angleOffset<=360; angleOffset+=15){
-      for(let j = 1; j<=this.ringNum; j+=1){
-        this.ringR = 80+j*30;
-        circle((this.ringR*cos(angleOffset))*resizeScale, (this.ringR*sin(angleOffset))*resizeScale,this.smallCircleR*resizeScale);
+    if(cycleFrameDiff>0 && cycleFrameDiff<60){
+      rotate(rotateOffset);
+      for(let angleOffset = 0; angleOffset<=360; angleOffset+=15){
+        for(let j = 1; j<=this.ringNum; j+=1){
+          this.ringR = 80+j*30;
+          circle((this.ringR*cos(angleOffset))*resizeScale, (this.ringR*sin(angleOffset))*resizeScale,this.smallCircleR*resizeScale);
+        }
       }
+    }
+    if(cycleFrameDiff>60 && cycleFrameDiff<120){
+      innerRingROffeset5 = lerp(innerRingROffeset5, 180, 0.01);
+      rotate(innerRingROffeset5);
+      for(let angleOffset = 0; angleOffset<=360; angleOffset+=15){
+        for(let j = 1; j<=this.ringNum; j+=1){
+          this.ringR = 80+j*30;
+          circle((this.ringR*cos(angleOffset))*resizeScale, (this.ringR*sin(angleOffset))*resizeScale,this.smallCircleR*resizeScale);
+        }
+      }
+    }
+    if(cycleFrameDiff>120){
+      innerRingCycleFrame = frameCount;
+      innerRingROffeset5 = 0;
     }
     pop();
 
@@ -54,21 +70,8 @@ class ringCreater{
 
     for(let k = 0; k<=4;k+=1){
       fill(this.innerRingColorR[k], this.innerRingColorG[k], this.innerRingColorB[k]);
-      circle(this.centerX*resizeScale, this.centerY*resizeScale, this.innerRingD[k]*resizeScale*sin(frameCount+k*5));
+      circle(this.centerX*resizeScale, this.centerY*resizeScale, this.innerRingD[k]*resizeScale*sin(2*(frameCount+k*5)));
     }
-
-    // console.log(innerRingROffeset5);
-    // if(cycleFrameDiff>0 && cycleFrameDiff<500){
-    //   innerRingROffeset5 = lerp(innerRingROffeset5, 50, 0.001);
-    //   fill(this.innerRingColorR[4], this.innerRingColorG[4], this.innerRingColorB[4]);
-    //   circle(this.centerX*resizeScale, this.centerY*resizeScale, (50-innerRingROffeset5)*resizeScale);
-    // }
-
-    // if(cycleFrameDiff>500){
-    //   innerRingCycleFrame = frameCount;
-    //   innerRingROffeset5 = 0;
-    // }
-
   }
 }
 
@@ -91,7 +94,7 @@ function drawChain(midPointX1, midPointY1, midPointX2, midPointY2, chainType){
 
   for(let k = -2; k <= 2; k++){
     push();
-    translate(k*50, 0);
+    translate(k*50*resizeScale, 0);
     rotate(2*rotateOffset);
     circle(0*resizeScale,0*resizeScale, 12*resizeScale);
     circle(-12*resizeScale,0*resizeScale, 2*resizeScale);
@@ -307,6 +310,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   angleMode(DEGREES);
   //createCanvas(1665, 900);
+  frameRate(30);
   rotateOffset = 0;
   innerRingROffeset5 = 0;
   cycleFrameDiff = 0;
@@ -317,7 +321,7 @@ function draw() {
   resizeScaleX = windowWidth/1665;
   resizeScaleY = windowHeight/900;
   resizeScale = min(resizeScaleX, resizeScaleY);
-  rotateOffset++;
+  rotateOffset+=2;
   cycleFrameDiff = frameCount - innerRingCycleFrame;
 
   background(250, 220, 180);
