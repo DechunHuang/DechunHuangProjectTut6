@@ -2,8 +2,8 @@ let resizeScaleX;
 let resizeScaleY;
 let resizeScale;
 let rotateOffset;
-let innerRingROffeset5;
-let innerRingCycleFrame;
+let ringRotateOffset;
+let ringCycleFrame;
 let cycleFrameDiff;
 
 //there are two kinds of rings
@@ -26,7 +26,10 @@ class ringCreater{
   drawOuterRing(){
     push();
     translate(this.centerX*resizeScale, this.centerY*resizeScale);
-    if(cycleFrameDiff>0 && cycleFrameDiff<60){
+    //change the speed of the outer rings periodically
+    //each cycle has 120 frames
+    //the outer rings rotate at a certain speed in the first 60 frames
+    if(cycleFrameDiff>=0 && cycleFrameDiff<60){
       rotate(rotateOffset);
       for(let angleOffset = 0; angleOffset<=360; angleOffset+=15){
         for(let j = 1; j<=this.ringNum; j+=1){
@@ -35,28 +38,27 @@ class ringCreater{
         }
       }
     }
-    if(cycleFrameDiff>60 && cycleFrameDiff<120){
-      innerRingROffeset5 = lerp(innerRingROffeset5, 180, 0.01);
-      rotate(innerRingROffeset5);
+    //then in the last 60 frames
+    //use lerp to make the speed changes from fast to slow
+    if(cycleFrameDiff>=60 && cycleFrameDiff<=120){
+      ringRotateOffset = lerp(ringRotateOffset, 180, 0.01);
+      rotate(ringRotateOffset);
       for(let angleOffset = 0; angleOffset<=360; angleOffset+=15){
         for(let j = 1; j<=this.ringNum; j+=1){
           this.ringR = 80+j*30;
           circle((this.ringR*cos(angleOffset))*resizeScale, (this.ringR*sin(angleOffset))*resizeScale,this.smallCircleR*resizeScale);
         }
       }
+      //when a cycle comes to the end
+      //the value of frameCount needs to be recorded
+      //such that cycleFrameDiff will become 0 when the new cycle starts
+      if(cycleFrameDiff>=120){
+        ringCycleFrame = frameCount;
+        ringRotateOffset = 0;
+      }
     }
-    if(cycleFrameDiff>120){
-      innerRingCycleFrame = frameCount;
-      innerRingROffeset5 = 0;
-    }
-    pop();
 
-    // for(let angleOffset = 0; angleOffset<=360; angleOffset+=15){
-    //   for(let j = 1; j<=this.ringNum; j+=1){
-    //     this.ringR = 80+j*30;
-    //     circle((this.centerX+this.ringR*cos(angleOffset))*resizeScale, (this.centerY+this.ringR*sin(angleOffset))*resizeScale,this.smallCircleR*resizeScale);
-    //   }
-    // }
+    pop();
   }
 
   //an inner ring is formed by nested circles
@@ -66,12 +68,15 @@ class ringCreater{
     this.innerRingColorG = [160, 130, 180, 140, 180];
     this.innerRingColorB = [100, 60, 150, 140, 150];
     this.ringNum =5;
+    //store the diameters of the circles inside the inner ring
     this.innerRingD = [170, 140, 110, 80, 50];
 
+    //use sin to let the sizes of the circles change periodically
     for(let k = 0; k<=4;k+=1){
       fill(this.innerRingColorR[k], this.innerRingColorG[k], this.innerRingColorB[k]);
       circle(this.centerX*resizeScale, this.centerY*resizeScale, this.innerRingD[k]*resizeScale*sin(2*(frameCount+k*5)));
     }
+    //let the circles change faster by multiplying 2 in sin
   }
 }
 
@@ -104,13 +109,6 @@ function drawChain(midPointX1, midPointY1, midPointX2, midPointY2, chainType){
     pop();
   }
 
-  // for(let k = -2; k <= 2; k++){
-  //   circle((0+k*50)*resizeScale,0*resizeScale, 12*resizeScale);
-  //   circle((-12+k*50)*resizeScale,0*resizeScale, 2*resizeScale);
-  //   circle((12+k*50)*resizeScale,0*resizeScale, 2*resizeScale);
-  //   circle((0+k*50)*resizeScale,-12*resizeScale, 2*resizeScale);
-  //   circle((0+k*50)*resizeScale,12*resizeScale, 2*resizeScale);
-  // }
   //draw the basic shapes of a chain
   //There are five circles in a basic shape
   //while four of them surround the largest one
@@ -251,6 +249,9 @@ function drawCircle4Row2(){
   ringCreater1.drawInnerRing();
 }
 
+//each large circle has a corresponding ringCreater object
+//this object is used to create the rings inside the large circle
+//and every large circle at least has inner ring
 function drawCircle1Row3(){
   noStroke();
   fill(255, 230, 180);
@@ -312,9 +313,9 @@ function setup() {
   //createCanvas(1665, 900);
   frameRate(30);
   rotateOffset = 0;
-  innerRingROffeset5 = 0;
+  ringRotateOffset = 0;
   cycleFrameDiff = 0;
-  innerRingCycleFrame = 0;
+  ringCycleFrame = 0;
 }
 
 function draw() {
@@ -322,7 +323,7 @@ function draw() {
   resizeScaleY = windowHeight/900;
   resizeScale = min(resizeScaleX, resizeScaleY);
   rotateOffset+=2;
-  cycleFrameDiff = frameCount - innerRingCycleFrame;
+  cycleFrameDiff = frameCount - ringCycleFrame;
 
   background(250, 220, 180);
 
