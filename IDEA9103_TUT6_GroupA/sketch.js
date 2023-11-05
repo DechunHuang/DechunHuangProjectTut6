@@ -85,7 +85,7 @@ class ringCreater{
 function drawChain(midPointX1, midPointY1, midPointX2, midPointY2, chainType){
   push();
   stroke(51,51,204);
-  strokeWeight(3);
+  strokeWeight(3*resizeScale);
   fill(255, 130, 0);
   translate(((midPointX1+midPointX2)/2)*resizeScale, ((midPointY1+midPointY2)/2)*resizeScale);
   if(chainType == 1){
@@ -158,7 +158,7 @@ function drawRadialLines(largeCircleCenterX, largeCircleCenterY, radialLineType)
   if(radialLineType == 2){
     stroke(51, 0, 102);
   }
-  strokeWeight(2);
+  strokeWeight(2*resizeScale);
   //there is a distance between
   //the inner ring and the starting point of a radial line
   //innerRadius is related to this distance
