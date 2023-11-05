@@ -5,6 +5,8 @@ let rotateOffset;
 let ringRotateOffset;
 let ringCycleFrame;
 let cycleFrameDiff;
+let rotateDirection;
+let chainRotateDirection;
 
 //there are two kinds of rings
 //they are formed by the small shapes in the large circles
@@ -23,6 +25,15 @@ class ringCreater{
   }
 
   //outer rings are made up of small circles
+  drawSmallCircles(){
+    for(let angleOffset = 0; angleOffset<=360; angleOffset+=15){
+      for(let j = 1; j<=this.ringNum; j+=1){
+        this.ringR = 80+j*30;
+        circle((this.ringR*cos(angleOffset))*resizeScale, (this.ringR*sin(angleOffset))*resizeScale,this.smallCircleR*resizeScale);
+      }
+    }
+  }
+
   drawOuterRing(){
     push();
     translate(this.centerX*resizeScale, this.centerY*resizeScale);
@@ -30,25 +41,15 @@ class ringCreater{
     //each cycle has 120 frames
     //the outer rings rotate at a certain speed in the first 60 frames
     if(cycleFrameDiff>=0 && cycleFrameDiff<60){
-      rotate(rotateOffset);
-      for(let angleOffset = 0; angleOffset<=360; angleOffset+=15){
-        for(let j = 1; j<=this.ringNum; j+=1){
-          this.ringR = 80+j*30;
-          circle((this.ringR*cos(angleOffset))*resizeScale, (this.ringR*sin(angleOffset))*resizeScale,this.smallCircleR*resizeScale);
-        }
-      }
+      rotate(rotateDirection*rotateOffset);
+      this.drawSmallCircles();
     }
     //then in the last 60 frames
     //use lerp to make the speed changes from fast to slow
     if(cycleFrameDiff>=60 && cycleFrameDiff<=120){
       ringRotateOffset = lerp(ringRotateOffset, 180, 0.01);
-      rotate(ringRotateOffset);
-      for(let angleOffset = 0; angleOffset<=360; angleOffset+=15){
-        for(let j = 1; j<=this.ringNum; j+=1){
-          this.ringR = 80+j*30;
-          circle((this.ringR*cos(angleOffset))*resizeScale, (this.ringR*sin(angleOffset))*resizeScale,this.smallCircleR*resizeScale);
-        }
-      }
+      rotate(rotateDirection*ringRotateOffset);
+      this.drawSmallCircles();
       //when a cycle comes to the end
       //the value of frameCount needs to be recorded
       //such that cycleFrameDiff will become 0 when the new cycle starts
@@ -97,10 +98,13 @@ function drawChain(midPointX1, midPointY1, midPointX2, midPointY2, chainType){
     rotate(130);
   }
 
+  //draw the basic shapes of a chain
+  //There are five circles in a basic shape
+  //while four of them surround the largest one
   for(let k = -2; k <= 2; k++){
     push();
     translate(k*50*resizeScale, 0);
-    rotate(2*rotateOffset);
+    rotate(chainRotateDirection*rotateDirection*2*rotateOffset);
     circle(0*resizeScale,0*resizeScale, 12*resizeScale);
     circle(-12*resizeScale,0*resizeScale, 2*resizeScale);
     circle(12*resizeScale,0*resizeScale, 2*resizeScale);
@@ -108,10 +112,6 @@ function drawChain(midPointX1, midPointY1, midPointX2, midPointY2, chainType){
     circle(0*resizeScale,12*resizeScale, 2*resizeScale);
     pop();
   }
-
-  //draw the basic shapes of a chain
-  //There are five circles in a basic shape
-  //while four of them surround the largest one
   pop();
 }
 
@@ -145,21 +145,27 @@ function drawChains(){
   drawChain(1385, 210, 1720, 490, 3);
 }
 
-//draw the first large circle in the first row
-function drawCircle1Row1(){
-  noStroke();
-  fill(255, 230, 180);
-  circle(230*resizeScale, 230*resizeScale, 400*resizeScale);
-  let ringCreater1 = new ringCreater(230, 230);
-  ringCreater1.drawInnerRing();
-
+//there are three large circles that contain radial lines
+function drawRadialLines(largeCircleCenterX, largeCircleCenterY, radialLineType){
   push();
-  translate(230*resizeScale, 230*resizeScale);
-  rotate(-0.2*rotateOffset);
-  stroke(255, 0, 0);
+  translate(largeCircleCenterX, largeCircleCenterY);
+  //compared to the outer rings
+  //the radial lines rotate in another direction 
+  rotate(-0.2*rotateDirection*rotateOffset);
+  if(radialLineType == 1){
+    stroke(255, 0, 0);
+  }
+  if(radialLineType == 2){
+    stroke(51, 0, 102);
+  }
   strokeWeight(2);
+  //there is a distance between
+  //the inner ring and the starting point of a radial line
+  //innerRadius is related to this distance
   let innerRadius = 100*resizeScale;
   let outerRadius = 200*resizeScale;
+
+  //use a for loop to draw the radial lines around the center
   for(let angle = 0; angle < 360; angle += 5){
     let startX = innerRadius*cos(angle);
     let startY = innerRadius*sin(angle);
@@ -168,6 +174,17 @@ function drawCircle1Row1(){
     line(startX, startY, endX, endY);
   }
   pop();
+}
+
+//draw the first large circle in the first row
+function drawCircle1Row1(){
+  noStroke();
+  fill(255, 230, 180);
+  circle(230*resizeScale, 230*resizeScale, 400*resizeScale);
+  let ringCreater1 = new ringCreater(230, 230);
+  ringCreater1.drawInnerRing();
+
+  drawRadialLines(230*resizeScale, 230*resizeScale, 1);
 }
 
 function drawCircle2Row1(){
@@ -222,21 +239,7 @@ function drawCircle3Row2(){
   let ringCreater1 = new ringCreater(975, 360);
   ringCreater1.drawInnerRing();
 
-  push();
-  translate(975*resizeScale, 360*resizeScale);
-  rotate(-0.2*rotateOffset);
-  stroke(51, 0, 102);
-  strokeWeight(2);
-  let innerRadius = 100*resizeScale;
-  let outerRadius = 200*resizeScale;
-  for(let angle = 0; angle < 360; angle += 5){
-    let startX = innerRadius*cos(angle);
-    let startY = innerRadius*sin(angle);
-    let endX = outerRadius*cos(angle);
-    let endY = outerRadius*sin(angle);
-    line(startX, startY, endX, endY);
-  }
-  pop();
+  drawRadialLines(975*resizeScale, 360*resizeScale, 2);
 }
 
 function drawCircle4Row2(){
@@ -258,22 +261,7 @@ function drawCircle1Row3(){
   circle(490*resizeScale, 940*resizeScale, 400*resizeScale);
   let ringCreater1 = new ringCreater(490, 940);
   ringCreater1.drawInnerRing();
-
-  push();
-  translate(490*resizeScale, 940*resizeScale);
-  rotate(-0.2*rotateOffset);
-  stroke(255, 0, 0);
-  strokeWeight(2);
-  let innerRadius = 100*resizeScale;
-  let outerRadius = 200*resizeScale;
-  for(let angle = 0; angle < 360; angle += 5){
-    let startX = innerRadius*cos(angle);
-    let startY = innerRadius*sin(angle);
-    let endX = outerRadius*cos(angle);
-    let endY = outerRadius*sin(angle);
-    line(startX, startY, endX, endY);
-  }
-  pop();
+  drawRadialLines(490*resizeScale, 940*resizeScale, 1);
 }
 
 function drawCircle2Row3(){
@@ -316,6 +304,8 @@ function setup() {
   ringRotateOffset = 0;
   cycleFrameDiff = 0;
   ringCycleFrame = 0;
+  rotateDirection = 1;
+  chainRotateDirection = 1;
 }
 
 function draw() {
@@ -324,6 +314,12 @@ function draw() {
   resizeScale = min(resizeScaleX, resizeScaleY);
   rotateOffset+=2;
   cycleFrameDiff = frameCount - ringCycleFrame;
+
+  //the shapes will rotate in another direction every 180 frames
+  if(frameCount%180==0){
+    rotateDirection = -rotateDirection;
+    rotateOffset = 0;
+  }
 
   background(250, 220, 180);
 
@@ -342,6 +338,25 @@ function draw() {
   drawCircle4Row3();
 
   drawChains();
+}
+
+//only change the rotation direction of the basic shapes in the chains
+function mouseClicked(){
+  if(frameCount%180!=0){
+    chainRotateDirection = -chainRotateDirection;
+  }
+}
+
+//let the shapes rotate in another direction
+//but as mentioned above
+//the direction will change every 180 frames
+//so if the direction has changed in the current frame
+//the direction will not change again at here
+function doubleClicked(){
+  if(frameCount%180!=0){
+    rotateDirection = -rotateDirection;
+    rotateOffset = 0;
+  }
 }
 
 function windowResized(){
